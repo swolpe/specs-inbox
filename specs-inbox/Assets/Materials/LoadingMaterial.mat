@@ -1,0 +1,99 @@
+- !<Material/90749088-cda4-4842-a95f-e696563e93bb>
+  PackagePath: ""
+  PassesInfo:
+    - !<own> e927b5e2-d428-4e1f-9535-ee2b923d86f4
+- !<PassInfo/e927b5e2-d428-4e1f-9535-ee2b923d86f4>
+  CachedProperties:
+    - Port_Depth_N004:
+        typeIdx: 1
+        value: 1.000000
+    - Port_FinalColor1_N004:
+        typeIdx: 5
+        value: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+    - Port_FinalColor2_N004:
+        typeIdx: 5
+        value: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+    - Port_FinalColor3_N004:
+        typeIdx: 5
+        value: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+    - Port_GSplatPointSize_N004:
+        typeIdx: 1
+        value: 0.000000
+    - Port_GSplatRotation_N004:
+        typeIdx: 5
+        value: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
+    - Port_GSplatScale_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 0.000000, z: 0.000000}
+    - Port_PrevWorldPosition_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 0.000000, z: 0.000000}
+    - Port_RayDirection_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 1.000000, z: 0.000000}
+    - Port_RayOrigin_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 0.000000, z: 0.000000}
+    - Port_Value3_N021:
+        typeIdx: 1
+        value: 0.000000
+    - Port_Value4_N021:
+        typeIdx: 1
+        value: 0.000000
+    - Port_WorldNormal_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 1.000000, z: 0.000000}
+    - Port_WorldPosition_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 0.000000, z: 0.000000}
+    - Port_WorldTangent_N004:
+        typeIdx: 4
+        value: {x: 0.000000, y: 0.000000, z: 1.000000}
+  DepthWrite: false
+  DepthTest: false
+  DepthFunction: LessEqual
+  TwoSided: false
+  ColorMask: {x: true, y: true, z: true, w: true}
+  CullMode: Back
+  PolygonOffset: {x: 0.000000, y: 0.000000}
+  FrustumCulling: Auto
+  FrustumCullPad: 0.000000
+  InstanceCount: 1
+  Defines:
+    []
+  BlendMode: PremultipliedAlphaAuto
+  Properties:
+    Port_Default_N003:
+      typeIdx: 1
+      value: 0.000000
+    Port_Default_N010:
+      typeIdx: 1
+      value: 1.000000
+    Port_Input1_N018:
+      typeIdx: 1
+      value: 2.000000
+    Port_Multiplier_N020:
+      typeIdx: 1
+      value: 0.500000
+    Port_Value1_N010:
+      typeIdx: 1
+      value: 0.000000
+    Port_Value_N006:
+      typeIdx: 3
+      value: {x: 0.500000, y: 0.500000}
+    PreviewEnabled:
+      typeIdx: 0
+      value: 0
+    Tweak_N11:
+      typeIdx: 1
+      value: 0.350000
+    Tweak_N28:
+      typeIdx: 5
+      value: {x: 1.000000, y: 0.804105, z: 0.000000, w: 1.000000}
+    Tweak_N7:
+      typeIdx: 1
+      value: 0.500000
+    mainOpacity:
+      typeIdx: 1
+      value: 1.000000
+  Pass: !<reference> 6adff6e3-9d72-41fc-a5c9-1a0fec28cb64
