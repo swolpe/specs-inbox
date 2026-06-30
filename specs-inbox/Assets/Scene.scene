@@ -855,6 +855,7 @@
   ScriptInputs:
     "":
       accessToken: ""
+      usePlaceholderData: true
   ScriptTypes:
     "":
       {}

@@ -12,6 +12,7 @@ import { ReadOnlyMailRequest, MailMessageRef } from './Api/ReadOnlyMailRequest';
 import { MailMessageParser } from './Api/MailMessageParser';
 import { InboxPageCache } from './App/InboxPageCache';
 import { StatusMessages, StatusText } from './App/StatusMessages';
+import { PLACEHOLDER_EMAILS } from './App/PlaceholderEmails';
 
 const ROW_HOVER_SFX = requireAsset('../Audio/hover-sfx.mp3') as AudioTrackAsset;
 const ROW_CLICK_SFX = requireAsset('../Audio/click-sfx.mp3') as AudioTrackAsset;
@@ -20,6 +21,7 @@ const PAGE_CLICK_SFX = requireAsset('../Audio/confirm-sfx.mp3') as AudioTrackAss
 const CLOSE_CLICK_SFX = requireAsset('../Audio/close-sfx.mp3') as AudioTrackAsset;
 const REFRESH_SFX = requireAsset('../Audio/confirm-sfx.mp3') as AudioTrackAsset;
 const ROW_TRANSITION_SFX = requireAsset('../Audio/whoosh-sfx.mp3') as AudioTrackAsset;
+const PLACEHOLDER_PAGE_SIZE = 10;
 
 @component
 export class AppController extends BaseScriptComponent {
@@ -27,6 +29,10 @@ export class AppController extends BaseScriptComponent {
   // Obtain one from https://developers.google.com/oauthplayground (scope: gmail.readonly)
   @input
   accessToken: string = '';
+
+  // Use local sample emails instead of making Gmail API requests.
+  @input
+  usePlaceholderData: boolean = false;
 
   // Runtime-created UI controller. It owns the generated Gmail panel hierarchy.
   private uiHud!: InboxHudController;
@@ -61,9 +67,10 @@ export class AppController extends BaseScriptComponent {
     this.uiHud.onNextPage.add(() => this.showNextPage());
   }
 
-  // Starts the first inbox load only after a valid access token is available.
+  // Starts the first inbox load. Real Gmail data requires a valid access token;
+  // placeholder data can load without Gmail authentication.
   private loadInitialInbox(): void {
-    if (!this.hasAccessToken()) {
+    if (!this.usePlaceholderData && !this.hasAccessToken()) {
       this.uiHud.showStatus(StatusText.MISSING_ACCESS_TOKEN);
       return;
     }
@@ -79,12 +86,18 @@ export class AppController extends BaseScriptComponent {
   // ========== Inbox fetch ==========
 
   // Main inbox loading pipeline:
-  // 1. Ask Gmail for message IDs in the inbox.
-  // 2. Fetch lightweight metadata for each ID.
-  // 3. Send EmailData rows to the UI.
+  // 1. Use placeholder emails when usePlaceholderData is enabled.
+  // 2. Otherwise, ask Gmail for message IDs in the inbox.
+  // 3. Fetch lightweight metadata for each ID.
+  // 4. Send EmailData rows to the UI.
   private async fetchInbox(pageIndex: number): Promise<void> {
     if (this.inboxCache.hasPage(pageIndex)) {
       this.showCachedPage(pageIndex);
+      return;
+    }
+
+    if (this.usePlaceholderData) {
+      this.fetchPlaceholderInbox(pageIndex);
       return;
     }
 
@@ -107,6 +120,19 @@ export class AppController extends BaseScriptComponent {
       console.error('[AppController] fetchInbox error: ' + err);
       this.uiHud.showStatus(StatusText.NETWORK_ERROR);
     }
+  }
+
+  // Loads one local demo page through the same cache/UI path used by Gmail data.
+  private fetchPlaceholderInbox(pageIndex: number): void {
+    const startIndex = pageIndex * PLACEHOLDER_PAGE_SIZE;
+    const emails = PLACEHOLDER_EMAILS.slice(startIndex, startIndex + PLACEHOLDER_PAGE_SIZE);
+    if (emails.length === 0) return;
+
+    const hasMorePlaceholderEmails = startIndex + PLACEHOLDER_PAGE_SIZE < PLACEHOLDER_EMAILS.length;
+    const nextPageToken = hasMorePlaceholderEmails ? 'placeholder-page-' + (pageIndex + 1) : '';
+
+    this.inboxCache.setPage(pageIndex, emails, nextPageToken);
+    this.showInboxEmails(emails, pageIndex);
   }
 
   private refreshInbox(): void {
