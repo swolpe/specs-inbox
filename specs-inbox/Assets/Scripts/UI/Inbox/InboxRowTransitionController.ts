@@ -1,6 +1,5 @@
 // InboxRowTransitionController owns the sequential inbox row transition.
 //
-// Learning goal:
 // InboxHudController decides when inbox data should render. This helper keeps the row
 // transition state, timing, easing, and reusable-row population together in one
 // focused place so InboxHudController can stay focused on panel orchestration.
@@ -87,6 +86,7 @@ export class InboxRowTransitionController {
     }
   }
 
+  // Starts one transition phase and enables per-frame updates only while rows animate.
   private startRowTransitionPhase(mode: RowTransitionMode, rowCount: number): void {
     this.rowTransitionMode = mode;
     this.rowTransitionElapsed = 0;
@@ -115,6 +115,7 @@ export class InboxRowTransitionController {
     this.completeRowTransitionPhase();
   }
 
+  // Updates one row after its stagger delay has elapsed.
   private updateTransitionRow(index: number, duration: number): void {
     const row = this.getEmailRows()[index];
     if (!row) return;
@@ -132,6 +133,7 @@ export class InboxRowTransitionController {
     row.setTransitionVisual(easedT, this.lerpVec3(HudLayoutConfig.ROW_FADE_IN_START_SCALE, HudLayoutConfig.ROW_DEFAULT_SCALE, this.easeOutBack(rawT)));
   }
 
+  // Finishes the active phase, then either swaps data, locks final visuals, or starts queued data.
   private completeRowTransitionPhase(): void {
     const completedMode = this.rowTransitionMode;
     this.rowTransitionMode = 'idle';
@@ -156,6 +158,7 @@ export class InboxRowTransitionController {
     this.startQueuedTransitionIfNeeded();
   }
 
+  // Runs the newest data update that arrived while a fade-in was already active.
   private startQueuedTransitionIfNeeded(): void {
     if (this.queuedTransitionEmails === null) return;
 
@@ -164,26 +167,31 @@ export class InboxRowTransitionController {
     this.start(queuedEmails);
   }
 
+  // Chooses the configured per-row duration for the active phase.
   private getRowTransitionDuration(): number {
     return this.rowTransitionMode === 'fadeOut'
       ? HudLayoutConfig.ROW_FADE_OUT_SECONDS
       : HudLayoutConfig.ROW_FADE_IN_SECONDS;
   }
 
+  // Easing helper for rows fading out.
   private easeInCubic(t: number): number {
     return t * t * t;
   }
 
+  // Easing helper for row opacity while fading in.
   private easeOutCubic(t: number): number {
     return 1 - Math.pow(1 - t, 3);
   }
 
+  // Easing helper for the small scale overshoot when rows fade in.
   private easeOutBack(t: number): number {
     const c1 = 1.70158;
     const c3 = c1 + 1;
     return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
   }
 
+  // Linear interpolation helper for row scale animation.
   private lerpVec3(start: vec3, end: vec3, t: number): vec3 {
     return new vec3(
       start.x + (end.x - start.x) * t,

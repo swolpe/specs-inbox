@@ -1,6 +1,5 @@
 // AppController is the data/controller layer for the project.
 //
-// Learning goal:
 // Read this file first. It shows the complete app flow: create UI, listen for
 // UI events, request Gmail data, cache pages, and send EmailData back to InboxHudController.
 // It intentionally does not create scene objects or build Gmail URLs; those

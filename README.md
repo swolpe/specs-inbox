@@ -5,7 +5,7 @@ A Lens Studio learning project for Snap Spectacles that displays a read-only Gma
 This sample is intended to help developers understand how a Spectacles Lens can combine:
 
 - TypeScript scripts in Lens Studio
-- Spectacles Interaction Kit tap/hover interactions
+- Spectacles Interaction Kit
 - Spectacles UI Kit panel-style UI elements
 - Gmail API read requests
 - Small client-side state management for cached inbox pages and selected messages
@@ -49,7 +49,7 @@ Those features are intentionally outside the scope of this learning example.
 - Snap Spectacles project setup
 - Spectacles Interaction Kit package
 - Spectacles UI Kit package
-- A Gmail account for testing
+- A Gmail account for testing with real data
 - A temporary Gmail OAuth 2.0 access token with read-only Gmail access
 
 The included project already contains `Packages/SpectaclesInteractionKit.lspkg` and `Packages/SpectaclesUIKit.lspkg`.
@@ -65,6 +65,7 @@ The request flow is:
 3. `GET /messages/{id}?format=full`
 
 Use the Gmail read-only scope when generating a test token:
+Obtain token from https://developers.google.com/oauthplayground (scope: gmail.readonly)
 
 ```text
 https://www.googleapis.com/auth/gmail.readonly
@@ -90,9 +91,9 @@ Set your Gmail access token in the Inspector to begin
 
 ## Placeholder data mode
 
-`AppController.usePlaceholderData` lets the sample run without Gmail API access. When enabled, `AppController` reads local `EmailData` records from `Assets/Scripts/App/PlaceholderEmails.ts`, divides them into 10-message pages, stores each page in the same `InboxPageCache` used by Gmail data, and sends the page to the existing inbox UI.
+`AppController.usePlaceholderData` lets the project run without Gmail API access. When enabled, `AppController` reads local `EmailData` records from `Assets/Scripts/App/PlaceholderEmails.ts`, divides them into 10-message pages, stores each page in the same `InboxPageCache` used by Gmail data, and sends the page to the existing inbox UI.
 
-In placeholder mode, refresh resets the local page cache and reloads page one. Previous/next pagination and email detail opening continue to use the existing UI event flow. Placeholder emails already include body text, so opening a placeholder email does not make a Gmail full-message request.
+In placeholder mode, refresh resets the local page cache and reloads page one. Previous/next pagination and email detail opening continue to use the existing UI event flow.
 
 ## How to use the Lens
 
@@ -100,9 +101,9 @@ In placeholder mode, refresh resets the local page cache and reloads page one. P
 - Wait for the inbox list to load. Rows fade in sequentially with a small scale-in motion when email data is ready.
 - Tap an email row to open the detail panel.
 - Hover the close, refresh, or pagination buttons to play the shared button-hover sound once on hover enter and see a small position, scale, icon color, and rounded-plate color change.
-- Tap the close button in the detail panel to play the optional close sound effect, show a small press motion on its rounded button plate, and return to the inbox.
-- Tap the refresh button to play the optional refresh sound effect, show a small press motion on its rounded button plate, and reload the inbox from page one.
-- Tap the pagination arrows to play the optional pagination sound effect, show a small press motion on their rounded button plates, and move between loaded and available inbox pages.
+- Tap the close button in the detail panel to play the close sound effect, show a small press motion on its rounded button plate, and return to the inbox.
+- Tap the refresh button to play the refresh sound effect, show a small press motion on its rounded button plate, and reload the inbox from page one.
+- Tap the pagination arrows to play the pagination sound effect, show a small press motion on their rounded button plates, and move between loaded and available inbox pages.
 
 ## Current runtime flow
 
@@ -117,7 +118,7 @@ In placeholder mode, refresh resets the local page cache and reloads page one. P
 9. `InboxPageCache` stores the loaded page, selected message data, and pagination token.
 10. `InboxHudController.setEmails()` delegates to `InboxRowTransitionController`: currently visible rows fade out sequentially, the reusable row pool receives the new email data, and the new rows fade in sequentially.
 11. When a row is tapped, `AppController.openEmail()` shows cached preview text immediately.
-12. If the full body is not cached yet, `AppController.openEmail()` shows the detail-panel loading status and requests the full Gmail message. Placeholder emails already include body text, so this Gmail full-message request is skipped in placeholder mode. The detail loading status is centered in the panel and mirrors the inbox loading status backplate, body text size, and loading material icon.
+12. If the full body is not cached yet, `AppController.openEmail()` shows the detail-panel loading status and requests the full Gmail message. The detail loading status is centered in the panel and mirrors the inbox loading status backplate, body text size, and loading material icon.
 13. For real Gmail data, `MailMessageParser.createFullEmailData()` collects readable `text/plain` body sections first, falls back to `text/html` body sections for HTML-only messages, then falls back to the Gmail snippet.
 14. `InboxHudController.showDetail()` displays the selected message in the detail panel.
 15. `DetailPanelView` uses the same stable email ID/from hash as `InboxEmailRow` to color the detail subject accent, then `populateDetailText()` adds inline labels for metadata and sends the body through `EmailTextFormatter.formatEmailBody()` before assigning the bounded Lens Studio text fields.
@@ -139,8 +140,16 @@ Assets/Scripts/
   Utils/                          # Display-only text cleanup helpers
 ```
 
-`AppController.ts` remains at the top level because it is the script component attached in the scene and is the best entry point for learners. The helper folders separate Gmail API code, app state, UI construction, inbox-row behavior, detail-panel behavior, shared UI element creation, and formatting utilities without changing runtime behavior.
+`AppController.ts` remains at the top level because it is the script component attached in the scene and is the best entry point. The helper folders separate Gmail API code, app state, UI construction, inbox-row behavior, detail-panel behavior, shared UI element creation, and formatting utilities.
 
+## Commenting conventions
+
+The TypeScript scripts use short comments at file, section, and method level to explain ownership and flow without restating every line of code. Comments are intended to answer:
+
+- which script owns the responsibility,
+- why the helper exists,
+- when data moves between Gmail, cache, controller, and UI layers, and
+- which UI helpers are presentation-only.
 
 ## Recommended reading order
 
@@ -160,7 +169,7 @@ Start with `Assets/Scripts/AppController.ts`. It is the main coordinator and sho
 12. `Utils/EmailTextFormatter.ts` — display-only cleanup for email text.
 13. `UI/Detail/DetailPanelView.ts` — detail panel construction, content rendering, and centered detail loading-status icon display.
 14. `UI/Detail/DetailPanelAnimator.ts` — detail panel open/close animation.
-15. `UI/HudSfxPlayer.ts` — optional UI audio playback for row hover, row click, shared icon-button hover, pagination click, close click, refresh interactions, and inbox row transitions.
+15. `UI/HudSfxPlayer.ts` — UI audio playback for row hover, row click, shared icon-button hover, pagination click, close click, refresh interactions, and inbox row transitions.
 16. `App/StatusMessages.ts` — user-facing status messages and simple Gmail HTTP status handling.
 
 ## Script responsibility map
@@ -181,34 +190,33 @@ Start with `Assets/Scripts/AppController.ts`. It is the main coordinator and sho
 | `Utils/EmailTextFormatter.ts` | Display-only text cleanup | Gmail API parsing or UI scene construction |
 | `UI/Detail/DetailPanelView.ts` | Detail panel objects, close interaction, selected-row subject accent, message text, and centered detail loading-status icon display | Gmail API calls or inbox pagination |
 | `UI/Detail/DetailPanelAnimator.ts` | Detail-panel transform animation | Email data or UI content rendering |
-| `UI/HudSfxPlayer.ts` | Optional UI audio playback for row hover, row click, shared icon-button hover, pagination click, close click, refresh interactions, and inbox row transitions | UI interaction decisions |
+| `UI/HudSfxPlayer.ts` | UI audio playback for row hover, row click, shared icon-button hover, pagination click, close click, refresh interactions, and inbox row transitions | UI interaction decisions |
 | `App/StatusMessages.ts` | Shared status strings and simple response-status checks | Gmail requests, parsing, or UI construction |
 
 ## Learning notes
 
+- Script comments are kept aligned with active behavior. Method comments are used most heavily at layer boundaries, cache/pagination operations, generated UI construction, and animation state transitions.
 - `EmailData` is the internal model. The UI does not need to know the full Gmail response shape.
 - Inbox rows are created once and reused. This keeps the runtime UI stable and easy to inspect.
 - The inbox status element creates one loading icon using `HudLayoutConfig.LOADING_MAT`. Its backplate width, backplate height, icon size, and loading-icon left padding come from `HudLayoutConfig` constants derived from the main panel width where appropriate. `AppController.fetchInbox()` enables that icon only for the inbox loading status, and other status messages keep the same text-only presentation.
 - The detail loading status mirrors the inbox loading status: it is centered in the detail panel, uses the same status backplate size, body text size, derived loading-icon placement, and loading material icon while full message details load.
-- Inbox row transitions are run by `InboxRowTransitionController` and configured by `ROW_FADE_IN_SECONDS`, `ROW_FADE_OUT_SECONDS`, `ROW_FADE_STAGGER_SECONDS`, `ROW_FADE_IN_START_SCALE`, and `ROW_FADE_OUT_END_SCALE` in `HudLayoutConfig.ts`. When a fade-out or fade-in phase starts with visible rows, the controller asks `HudSfxPlayer` to play the optional row transition whoosh sound.
+- Inbox row transitions are run by `InboxRowTransitionController` and configured by `ROW_FADE_IN_SECONDS`, `ROW_FADE_OUT_SECONDS`, `ROW_FADE_STAGGER_SECONDS`, `ROW_FADE_IN_START_SCALE`, and `ROW_FADE_OUT_END_SCALE` in `HudLayoutConfig.ts`. When a fade-out or fade-in phase starts with visible rows, the controller asks `HudSfxPlayer` to play the row transition whoosh sound.
 - Metadata and full message bodies are loaded separately for real Gmail data. Inbox loading stays lightweight, and full body text is requested only after the wearer opens a message. Placeholder emails already include body text and use the same detail display path without a Gmail full-message request.
 - Pagination is cached by page index. Going back to an already loaded page does not make another Gmail request.
 - UI events flow upward from `InboxHudController` to `AppController`; loaded email data flows downward from `AppController` to `InboxHudController`.
-- Audio tracks are loaded in `AppController.ts` with `requireAsset()` from the included files in `Assets/Audio`, then passed into `HudSfxPlayer` during UI setup. This keeps the same runtime SFX playback behavior without exposing the SFX as `AppController` Inspector fields. Rows use the shared hover/click SFX. Refresh, pagination, and close buttons share the button-hover sound for hover enter, while keeping their own click/tap SFX. Row hide/reveal animation phases use the included `whoosh-sfx.mp3` asset.
-- Icon buttons use shared rounded background plates plus hover and press feedback in `UiElementFactory.addTapButton()`, so the refresh, pagination, and detail close controls read as clickable controls and respond consistently. Their optional hover callback fires from `onHoverEnter`, so the shared hover SFX plays once per hover interaction without changing tap behavior.
-
-- The generated panel layout is centered around `HudLayoutConfig.PANEL_W`. The inbox header mail icon uses `HEADER_ICON_X` and the refresh button uses `HEADER_REFRESH_BUTTON_X`; both are derived from panel width constants. Row hit-area width, row text bounds, row divider width, status backplate width, status loading-icon padding, detail text widths, detail content plate widths, and detail close/loading icon placement are also derived from that panel width while preserving the original `PANEL_W = 42` cm layout as the baseline.
+- Audio tracks are loaded in `AppController.ts` with `requireAsset()` from the included files in `Assets/Audio`, then passed into `HudSfxPlayer` during UI setup. 
+- Icon buttons use shared rounded background plates plus hover and press feedback in `UiElementFactory.addTapButton()`, so the refresh, pagination, and detail close controls read as clickable controls and respond consistently.
+- The generated panel layout is centered around `HudLayoutConfig.PANEL_W`. The inbox header mail icon uses `HEADER_ICON_X` and the refresh button uses `HEADER_REFRESH_BUTTON_X`; both are derived from panel width constants. Row hit-area width, row text bounds, row divider width, status backplate width, status loading-icon padding, detail text widths, detail content plate widths, and detail close/loading icon placement are also derived from that panel width.
 - Gmail body extraction prefers all readable `text/plain` MIME parts and joins separate body sections with paragraph breaks instead of stopping at the first matching part.
-- HTML-only messages now use decoded `text/html` body sections before falling back to the Gmail snippet. The detail panel still does not render rich HTML or markdown; `EmailTextFormatter.formatEmailBody()` converts common links, images with alt text, headings, lists, block quotes, simple table spacing, emphasis markers, and whitespace into readable plain text for the existing Lens Studio `Text` component.
-- The detail subject line reuses the selected email's row accent color as a small leading marker. Detail metadata labels remain inline text (`From:`, `Date:`, `Message:`), while soft rounded plates separate the metadata and body regions without adding new interaction behavior.
+- HTML-only messages use decoded `text/html` body sections before falling back to the Gmail snippet. The detail panel does not render rich HTML or markdown; `EmailTextFormatter.formatEmailBody()` converts common links, images with alt text, headings, lists, block quotes, simple table spacing, emphasis markers, and whitespace into readable plain text for the existing Lens Studio `Text` component.
 
 ## Assumptions for this sample
 
 - The Lens is used as a learning resource, not as a production email client.
 - The developer provides a valid temporary Gmail OAuth access token manually when testing real Gmail data.
-- Placeholder mode uses fictional local email records and does not authenticate with Gmail.
 - The token has read-only Gmail permission.
-- The device/runtime can make network requests to the Gmail API.
+- Placeholder mode uses fictional local email records and does not authenticate with Gmail.
+- The device can make network requests to the Gmail API.
 - The Gmail inbox contains messages that can be represented with From, Subject, Date, snippet, and optional `text/plain` or `text/html` body fields.
 
 ## Useful references

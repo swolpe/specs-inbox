@@ -1,6 +1,5 @@
 // InboxHudController is the presentation layer for the project.
 //
-// Learning goal:
 // InboxHudController owns panel orchestration and rendering only. It emits
 // simple events when the user interacts with the HUD, and AppController decides
 // what data action should happen next. This keeps UI code separate from Gmail
@@ -212,10 +211,6 @@ export class InboxHudController extends BaseScriptComponent {
     titleText.verticalAlignment = VerticalAlignment.Center;
     titleText.textFill.mode = TextFillMode.Solid;
     titleText.textFill.color = HudLayoutConfig.COLOR_INBOX_HEADER_TEXT;
-    // titleText.outlineSettings.enabled = true;
-    // titleText.outlineSettings.fill.mode = TextFillMode.Solid;
-    // titleText.outlineSettings.fill.color = HudLayoutConfig.COLOR_INBOX_HEADER_OUTLINE;
-    // titleText.outlineSettings.size = HudLayoutConfig.INBOX_HEADER_OUTLINE_SIZE;
     this.elementFactory.addTapButton(header, HudLayoutConfig.ICON_REFRESH, 3.0, new vec3(HudLayoutConfig.HEADER_REFRESH_BUTTON_X, 0, 0), 5, 5, () => {
       this.sfxPlayer.playRefresh();
       this.refreshEvent.invoke();
@@ -248,7 +243,7 @@ export class InboxHudController extends BaseScriptComponent {
     return loadingIcon;
   }
 
-  // Creates the fixed row pool that renderEmailRows reuses for every inbox page.
+  // Creates the fixed row pool that the transition controller reuses for every inbox page.
   private buildEmailRows(content: SceneObject): void {
     for (let i = 0; i < HudLayoutConfig.MAX_EMAIL_ROWS; i++) {
       this.emailRows.push(this.createEmailRow(content, i));

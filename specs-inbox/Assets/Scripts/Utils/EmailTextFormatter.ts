@@ -1,6 +1,5 @@
 // EmailTextFormatter owns display-only text cleanup used by InboxHudController.
 //
-// Learning goal:
 // Formatting here is presentation-only. It should not change which Gmail data is
 // loaded; it only makes strings fit and read better inside the fixed HUD panels.
 

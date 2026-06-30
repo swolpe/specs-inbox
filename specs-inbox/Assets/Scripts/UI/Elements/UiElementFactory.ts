@@ -1,6 +1,5 @@
 // UiElementFactory owns shared Lens Studio UI element construction for InboxHudController.
 //
-// Learning goal:
 // InboxHudController should decide which panels and states to render. This helper keeps the
 // repeated low-level scene-object, text, icon, frame, and hit-area setup in one
 // focused place so panel builders stay easier to read.

@@ -1,6 +1,6 @@
 // StatusMessages owns controller-level status text and simple Gmail HTTP status classification.
-// Keeping these values outside AppController makes the client flow easier to scan
-// without changing how the UI behaves.
+//
+// Keeping these values outside AppController makes the client flow easier to scan.
 
 export const StatusText = {
   MISSING_ACCESS_TOKEN: 'Set your Gmail access token in the Inspector to begin',
@@ -12,6 +12,7 @@ export const StatusText = {
 };
 
 export class StatusMessages {
+  // Gmail requests used by this sample are considered successful only on HTTP 200.
   static isSuccess(status: number): boolean {
     return status === 200;
   }

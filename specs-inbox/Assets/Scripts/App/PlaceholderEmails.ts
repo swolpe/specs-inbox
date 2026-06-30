@@ -1,8 +1,6 @@
 // Fictional demo inbox data used when AppController.usePlaceholderData is enabled.
 //
-// Learning goal:
-// Keeping this in a separate file makes the demo data easy to review or replace
-// without changing the real Gmail request flow in AppController.
+// Keeping this in a separate file makes the demo data easy to review or replace.
 
 import { EmailData } from '../Models/EmailData';
 

@@ -1,7 +1,6 @@
 // HudLayoutConfig owns the fixed layout, asset, and color values used by InboxHudController.
 //
-// Learning goal:
-// Keeping layout constants here lets juniors tune HUD spacing, colors, icons, and
+// Keeping layout constants here lets you tune HUD spacing, colors, icons, and
 // text sizes without searching through panel-construction code.
 
 // ---------- Depth placement ----------
@@ -100,7 +99,6 @@ export const DETAIL_ANIMATION_SECONDS = 0.5;
 
 // ---------- Text sizes (calibrated for z = -110 cm) ----------
 export const TS_INBOX_HEADER = 112;
-// export const INBOX_HEADER_OUTLINE_SIZE = 0.12;
 export const HEADER_ICON_X = -PANEL_HALF_W + PANEL_SIDE_MARGIN;
 export const HEADER_REFRESH_BUTTON_X = PANEL_HALF_W - 4.0;
 export const HEADER_CLOSE_BUTTON_X = PANEL_HALF_W - PANEL_SIDE_MARGIN;
@@ -147,7 +145,6 @@ export const COLOR_TEXT_SNIPPET = new vec4(0.78, 0.83, 0.91, 0.62);
 export const COLOR_STATUS = new vec4(1, 0.88, 0.55, 0.95);
 export const COLOR_HEADER_ACCENT = new vec4(0.45, 0.92, 1, 1);
 export const COLOR_INBOX_HEADER_TEXT = new vec4(1, 1, 1, 1);
-// export const COLOR_INBOX_HEADER_OUTLINE = new vec4(0.75, 0.53, 0.94, 1);
 export const COLOR_DIVIDER = new vec4(1, 1, 1, 0.16);
 export const COLOR_ROW_PLATE_A = new vec4(1, 1, 1, 0.045);
 export const COLOR_ROW_PLATE_B = new vec4(0.45, 0.92, 1, 0.06);

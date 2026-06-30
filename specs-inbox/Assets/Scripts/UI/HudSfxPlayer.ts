@@ -1,9 +1,7 @@
 // HudSfxPlayer owns creation and playback for Gmail UI sound effects.
 //
-// Learning goal:
-// Optional audio setup is kept out of InboxHudController's rendering code. InboxHudController decides
-// when an interaction happened; this helper only creates and plays the reusable
-// AudioComponents.
+// Audio setup is kept out of InboxHudController's rendering code. InboxHudController decides
+// when an interaction happened; this helper only creates and plays the reusable AudioComponents.
 
 export class HudSfxPlayer {
   private hoverSfxPlayer: AudioComponent | null = null;

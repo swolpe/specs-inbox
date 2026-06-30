@@ -1,6 +1,5 @@
 // DetailPanelAnimator owns the open/close transition for the Gmail detail panel.
 //
-// Learning goal:
 // Animation state is isolated from InboxHudController so the main UI script can focus on
 // building panels and rendering text. This helper only moves/scales the existing
 // detail panel during open and close transitions.

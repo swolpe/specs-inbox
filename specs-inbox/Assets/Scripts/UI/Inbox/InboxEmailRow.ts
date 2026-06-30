@@ -1,7 +1,6 @@
 // InboxEmailRow owns the behavior for one reusable Gmail inbox row.
 //
-// Learning goal:
-// InboxHudController still decides when rows are created and rendered, while this helper
+// InboxHudController decides when rows are created and rendered, while this helper
 // keeps row-specific construction, data binding, tap selection, and feedback in
 // one focused place.
 

@@ -1,6 +1,5 @@
 // DetailPanelView owns the generated Gmail email-detail panel.
 //
-// Learning goal:
 // InboxHudController coordinates top-level UI events and inbox rendering. This helper keeps
 // detail-panel scene construction, text population, status display, and the
 // detail open/close animation together in one focused place.
@@ -121,10 +120,6 @@ export class DetailPanelView {
       this.options.onCloseRequested();
     };
 
-    // this.options.elementFactory.addContentPlate(header, 'SubjectPlate',
-    //   new vec2(HudLayoutConfig.DETAIL_SUBJECT_PLATE_W, HudLayoutConfig.DETAIL_SUBJECT_PLATE_H),
-    //   new vec3(HudLayoutConfig.DETAIL_SUBJECT_PLATE_X, HudLayoutConfig.DETAIL_SUBJECT_PLATE_Y, HudLayoutConfig.DETAIL_CONTENT_PLATE_Z),
-    //   HudLayoutConfig.COLOR_DETAIL_SUBJECT_PLATE, HudLayoutConfig.DETAIL_CONTENT_PLATE_CORNER_RADIUS);
 
     this.detailSubjectAccentText = this.options.elementFactory.addText(header, '|', HudLayoutConfig.TS_SUBHEAD,
       new vec3(HudLayoutConfig.DETAIL_SUBJECT_ACCENT_X, 0, 0.05), HudLayoutConfig.COLOR_HEADER_ACCENT);
@@ -207,7 +202,6 @@ export class DetailPanelView {
     if (this.detailDateText)    this.detailDateText.text    = formatLabeledLine('Date', email.date);
     if (this.detailBodyText)    this.detailBodyText.text    = 'Message:\n' + formatEmailBody(email.body || email.snippet);
   }
-
 
   // Uses the same stable email-based accent selection as InboxEmailRow so the
   // detail subject carries the selected row's color cue forward.
